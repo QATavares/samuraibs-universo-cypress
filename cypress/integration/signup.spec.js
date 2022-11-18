@@ -31,7 +31,7 @@ describe('cadastro', function () {
   
   })
 
-  context('quando o e-mail já existe na base de dados', function(){
+  context.only('quando o e-mail já existe na base de dados', function(){
     //Massa de teste fixa para evitar possíveis erros
     const user = {
       name: 'Barbeiro',
@@ -41,23 +41,21 @@ describe('cadastro', function () {
     }
 
     before(function(){
-
       cy.task('removeUser', user.email)
       .then(function (result) {
-        console.log(result)
-    })
+          console.log(result)
+  })
 
-    cy.request(
+  cy.request(
       'POST',
       'http://localhost:3333/users',
-      user)
-      .then(function (response){
-        expect(response.status).to.eq(200)
-      
-      })
-
+      user
+  ).then(function (response) {
+      expect(response.status).to.eq(200)
+  })
     })
-      it('deve exibir email já cadastrado', function () {
+      
+    it('deve exibir email já cadastrado', function () {
         signupPage.go()
         signupPage.form(user)
         signupPage.submit()

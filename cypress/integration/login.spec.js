@@ -1,9 +1,9 @@
 import loginPage from '../support/pages/login'
 import dashPage from '../support/pages/dashboard'
  
-describe('login', function(){
+describe('login', function () {
 
-  context('quando o usuario é muito bom', function(){
+  context('quando o usuario é muito bom', function () {
 
     const user = {
       name: 'Peter Parker',
@@ -12,20 +12,20 @@ describe('login', function(){
       is_provider: true
      }
 
-     before(function(){
+     before(function () {
       cy.task('removeUser', user.email)
-        .then(function(result){
+      .then(function (result) {
           console.log(result)
-        })
+  })
 
-      cy.request(
-          'POST',
-          'http://localhost:3333/users',
-          user)
-        .then(function (response){
-          expect(response.status).to.eq(200)
-        })
-      })
+  cy.request(
+      'POST',
+      'http://localhost:3333/users',
+      user
+  ).then(function (response) {
+      expect(response.status).to.eq(200)
+  })
+  })
 
     it('deve logar com sucesso', function(){
       loginPage.go()

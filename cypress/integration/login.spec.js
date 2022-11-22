@@ -1,5 +1,6 @@
 import loginPage from '../support/pages/login'
 import dashPage from '../support/pages/dashboard'
+import login from '../support/pages/login'
  
 describe('login', function () {
 
@@ -13,19 +14,9 @@ describe('login', function () {
      }
 
      before(function () {
-      cy.task('removeUser', user.email)
-      .then(function (result) {
-          console.log(result)
+      cy.postUser(user)
   })
 
-  cy.request(
-      'POST',
-      'http://localhost:3333/users',
-      user
-  ).then(function (response) {
-      expect(response.status).to.eq(200)
-  })
-  })
 
     it('deve logar com sucesso', function(){
       loginPage.go()
@@ -36,4 +27,26 @@ describe('login', function () {
     })
     
   })
+
+  context('quando o usuário é bom mas a senha está incorreta', function(){
+
+    let user = {
+      name: 'Tony Stark',
+      email: 'tstark@samuraibs.com',
+      password: 'pwd1234',
+      is_provider: true
+    }
+
+    before(function(){
+      cy.postUser(user)
+      user.password = 'pdw4321'
+    })
+
+    it('deve notificar erro de credenciais', function(){
+      loginPage.go()
+      loginPage.form(user)
+      loginPage.submit()
+    })
+  })
 })
+

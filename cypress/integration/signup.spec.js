@@ -31,7 +31,7 @@ describe('cadastro', function () {
   
   })
 
-  context.only('quando o e-mail já existe na base de dados', function(){
+  context('quando o e-mail já existe na base de dados', function(){
     //Massa de teste fixa para evitar possíveis erros
     const user = {
       name: 'Barbeiro',

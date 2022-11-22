@@ -17,7 +17,6 @@ describe('login', function () {
       cy.postUser(user)
   })
 
-
     it('deve logar com sucesso', function(){
       loginPage.go()
       loginPage.form(user)
@@ -28,7 +27,7 @@ describe('login', function () {
     
   })
 
-  context('quando o usuário é bom mas a senha está incorreta', function(){
+  context.only('quando o usuário é bom mas a senha está incorreta', function(){
 
     let user = {
       name: 'Tony Stark',
@@ -38,14 +37,17 @@ describe('login', function () {
     }
 
     before(function(){
-      cy.postUser(user)
-      user.password = 'pdw4321'
+      cy.postUser(user).then(function(){
+        user.password = 'pdw4321'
+      })
+
     })
 
     it('deve notificar erro de credenciais', function(){
       loginPage.go()
       loginPage.form(user)
       loginPage.submit()
+      cy.wait(5000)
     })
   })
 })

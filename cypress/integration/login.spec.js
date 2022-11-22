@@ -27,7 +27,7 @@ describe('login', function () {
     
   })
 
-  context.only('quando o usuário é bom mas a senha está incorreta', function(){
+  context('quando o usuário é bom mas a senha está incorreta', function(){
 
     let user = {
       name: 'Tony Stark',
@@ -47,7 +47,38 @@ describe('login', function () {
       loginPage.go()
       loginPage.form(user)
       loginPage.submit()
-      cy.wait(5000)
+
+      const message = 'Ocorreu um erro ao fazer login, verifique suas credenciais.'
+
+      loginPage.toast.shouldHaveText(message)
+    })
+  })
+
+  context.only('quando o formato do e-mail é inválido', function(){
+    
+    const emails = [
+      'tstark.com',
+      'gmail.com',
+      '@gmail.com',
+      '@',
+      'tstrak',
+      '12',
+      '@#',
+      'tstark!'
+    ]
+
+    before(function(){
+      loginPage.go()
+    })
+
+    emails.forEach(function(email){
+      it('não deve logar com o email: ' + email, function(){
+        const user = { email: email, password: 'pwd123' }
+
+        loginPage.form(user)
+        loginPage.submit()
+        loginPage.alertHaveText('Informe um email válido')
+      })
     })
   })
 })

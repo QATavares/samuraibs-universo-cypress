@@ -54,7 +54,7 @@ describe('login', function () {
     })
   })
 
-  context.only('quando o formato do e-mail é inválido', function(){
+  context('quando o formato do e-mail é inválido', function(){
     
     const emails = [
       'tstark.com',
@@ -77,7 +77,26 @@ describe('login', function () {
 
         loginPage.form(user)
         loginPage.submit()
-        loginPage.alertHaveText('Informe um email válido')
+        loginPage.alert.haveText('Informe um email válido')
+      })
+    })
+  })
+
+  context('quando não preencho nenhum dos campos', function(){
+    const alertMessages = [
+      'E-mail é obrigatório',
+      'Senha é obrigatória'
+    ]
+
+    before(function(){
+      loginPage.go()
+      loginPage.submit()
+    })
+
+    alertMessages.forEach(function(alert){
+
+      it('deve exibir ' + alert.toLowerCase(), function() {
+        loginPage.alert.haveText(alert)
       })
     })
   })

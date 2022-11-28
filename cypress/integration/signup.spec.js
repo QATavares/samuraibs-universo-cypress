@@ -3,17 +3,21 @@ import signupPage from '../support/pages/signup'
 //Agrupador de casos de testes
 describe('cadastro', function () {
   
+  before(function(){
+    cy.fixture('signup').then(function(signup){
+      this.sucess = signup.sucess
+      this.email_dup = signup.email_dup
+      this.email_inv = signup.email_inv
+      this.short_password = signup.short_password
+    })
+  })
+
+
   context('quando é um novo usuário', function(){
-    // definindo a massa de testes
-    const user = {
-      name: 'Usuário Teste',
-      email: 'email@samuraibs.com',
-      password: 'pwd1234'
-    }
 
     before(function(){
-    // removendo o usuárop ára que a massa seja sempre válida
-    cy.task('removeUser', user.email)
+    // removendo o usuário ára que a massa seja sempre válida
+    cy.task('removeUser', this.sucess.email)
       .then(function (result) {
         console.log(result)
     })
@@ -23,55 +27,31 @@ describe('cadastro', function () {
     it('deve cadastrar com sucesso', function () {
 
       signupPage.go()
-      signupPage.form(user)
+      signupPage.form(this.sucess)
       signupPage.submit()
       signupPage.toast.shouldHaveText('Agora você se tornou um(a) Samurai, faça seu login para ver seus agendamentos!')
- 
     })
   
   })
 
   context('quando o e-mail já existe na base de dados', function(){
-    //Massa de teste fixa para evitar possíveis erros
-    const user = {
-      name: 'Barbeiro',
-      email: 'barbeiroFixo@samuraibs.com',
-      password: 'pwd1234',
-      is_provider: true
-    }
-
     before(function(){
-      cy.task('removeUser', user.email)
-      .then(function (result) {
-          console.log(result)
-  })
-
-  cy.request(
-      'POST',
-      'http://localhost:3333/users',
-      user
-  ).then(function (response) {
-      expect(response.status).to.eq(200)
-  })
+      cy.postUser(this.email_dup)
     })
       
     it('deve exibir email já cadastrado', function () {
         signupPage.go()
-        signupPage.form(user)
+        signupPage.form(this.email_dup)
         signupPage.submit()
         signupPage.toast.shouldHaveText('Email já cadastrado para outro usuário.')
       })
       })
 
   context('quando o e-mail é incorreto', function(){
-    const user = {
-      name: 'Elizabeth Olson',
-      email: 'liza.yahoo.com',
-      password: 'pwd123'
-    }
+
     it('deve exibir mensagem de alerta', function(){
       signupPage.go()
-      signupPage.form(user)
+      signupPage.form(this.email_inv)
       signupPage.submit()
       signupPage.alert.haveText('Informe um email válido')
     })
@@ -81,21 +61,13 @@ describe('cadastro', function () {
 
     const passwords = ['1', '1b', '1sa', 'asd5', '1@3A5']
 
-    beforeEach(function(){
-      signupPage.go()
-    })
-
-    passwords.forEach(function(p){
+    passwords.forEach(function (p) {
       it('não deve cadastrar com a senha : ' + p , function(){
-
-        const user = { 
-          name: 'Thor',
-          email: 'thor@gmail.com',
-          password: p
-        }
+        
+        this.short_password.password = p
 
         signupPage.go()
-        signupPage.form(user)
+        signupPage.form(this.short_password)
         signupPage.submit()
       })
     })

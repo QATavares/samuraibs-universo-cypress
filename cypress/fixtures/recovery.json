@@ -1,0 +1,6 @@
+{
+  "name": "Bruce Wayne",
+  "email": "batman@gmail.com",
+  "password": "pwd123",
+  "is_provider": true
+}

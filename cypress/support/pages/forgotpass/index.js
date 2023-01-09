@@ -1,6 +1,11 @@
 import { el } from './elements'
+import toast from '../../components/toast'
 
 class ForgotPassPage {
+
+  constructor() {
+    this.toast = toast
+  }
 
   go() {
     cy.visit('/forgot-password')

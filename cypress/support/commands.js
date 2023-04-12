@@ -52,7 +52,7 @@ Cypress.Commands.add('recoveryPass', function (email) {
 //Trabalhando com as datas
 Cypress.Commands.add('createAppointment', function (hour) {
   let now = new Date()
-  now.setDate(now.getDate() + 2)
+  now.setDate(now.getDate() + 1)
 
   Cypress.env('appointmentDay', now.getDate())
 
